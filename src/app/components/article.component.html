@@ -1,0 +1,42 @@
+<button (click)="loadAllArticles()">Show All Articles</button>
+<button (click)="createArticleView()">Create Article</button>
+<button (click)="getArticleByIdView()">Search Article By Id</button>
+
+<div [ngSwitch]="task">
+    <ng-template [ngSwitchCase]="'all'">
+        <ul>
+            <li *ngFor="let article of articles$ | async">
+                {{article.id}} - {{article.title}} - {{article.category}}
+            </li>
+        </ul>
+    </ng-template>
+
+    <ng-template ngSwitchCase="create">
+        <p> <b>{{ message$ | async }}</b> </p>
+        <form [formGroup]="articleForm" (ngSubmit)="onFormSubmit()">
+            <p> Enter New Id: <input formControlName="id">
+                <label *ngIf="id?.hasError('required') && !articleForm.pristine" style="color:red">
+                    Enter article id
+                </label>
+            </p>
+            <p> Enter Title: <input formControlName="title"> </p>
+            <p> Enter Category: <input formControlName="category"> </p>
+            <p> <button> Submit </button> </p>
+        </form>
+        <ul>
+            <li *ngFor="let article of articles$ | async">
+                {{article.id}} - {{article.title}} - {{article.category}}
+            </li>
+        </ul>
+    </ng-template>
+
+    <ng-template ngSwitchCase="get">
+        <p> Enter Id: <input ngModel (input)="searchArticleById(id.value)" #id="ngModel"> </p>
+        <ul>
+            <li *ngFor="let article of articles$ | async">
+                {{article.id}} - {{article.title}} - {{article.category}}
+            </li>
+        </ul>
+    </ng-template>
+    <ng-template ngSwitchDefault> <br /><b>Select Task</b> </ng-template>
+</div>
